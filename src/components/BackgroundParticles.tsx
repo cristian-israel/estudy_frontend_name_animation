@@ -8,17 +8,15 @@ interface Particle {
   speedX: number;
   speedY: number;
   opacity: number;
-  ttl: number; // tempo de vida em frames
-  fadeOut?: boolean; // se está começando a desaparecer
+  ttl: number;
+  life: number; // tempo desde que nasceu (para fade-in)
 }
 
 export function BackgroundParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouse = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
   const particles = useRef<Particle[]>([]);
-  const targetCount = useRef(
-    Math.min(Math.floor(window.innerWidth * 1.5), 1000)
-  );
+  const targetCount = useRef(Math.min(Math.floor(window.innerWidth * 1.5), 1000));
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -42,55 +40,63 @@ export function BackgroundParticles() {
       size: Math.random() * 2 + 0.5,
       speedX: (Math.random() - 0.5) * 0.5,
       speedY: (Math.random() - 0.5) * 0.5,
-      opacity: Math.random() * 0.5 + 0.4,
-      ttl: Math.floor(Math.random() * 600 + 300), // 5–15s em 60FPS
+      opacity: 0, // inicia invisível (fade-in)
+      ttl: Math.floor(Math.random() * 600 + 300),
+      life: 0, // controle para fade-in
     });
+
+    const lerp = (start: number, end: number, amt: number) => start + (end - start) * amt;
 
     const drawParticles = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      particles.current.forEach((particle, i) => {
-        // Reduz tempo de vida
-        particle.ttl -= 1;
+      for (let i = particles.current.length - 1; i >= 0; i--) {
+        const p = particles.current[i];
 
-        if (particle.ttl <= 60) {
-          // começa a sumir
-          particle.opacity = Math.max(0, particle.opacity - 0.01);
+        // tempo de vida
+        p.ttl -= 1;
+        p.life += 1;
+
+        // fade-in: até 60 frames (~1s)
+        if (p.life < 60) {
+          p.opacity = lerp(p.opacity, 0.7, 0.05);
         }
 
-        // remove se sumiu completamente
-        if (particle.ttl <= 0 || particle.opacity <= 0) {
+        // fade-out: últimos 60 frames
+        if (p.ttl < 60) {
+          p.opacity = lerp(p.opacity, 0, 0.05);
+        }
+
+        if (p.ttl <= 0 || p.opacity <= 0.01) {
           particles.current.splice(i, 1);
-          return;
+          continue;
         }
 
-        // Seguir mouse
-        const dx = mouse.current.x - particle.x;
-        const dy = mouse.current.y - particle.y;
-        particle.x += dx * 0.0003; // ou até 0.0002
-        particle.y += dy * 0.0003;
+        // movimento levemente em direção ao mouse
+        p.x = lerp(p.x, mouse.current.x, 0.0003);
+        p.y = lerp(p.y, mouse.current.y, 0.0003);
 
-        // Movimento natural
-        particle.x += particle.speedX;
-        particle.y += particle.speedY;
+        // movimento natural
+        p.x += p.speedX;
+        p.y += p.speedY;
 
-        // Loop bordas
-        if (particle.x < 0) particle.x = canvas.width;
-        if (particle.x > canvas.width) particle.x = 0;
-        if (particle.y < 0) particle.y = canvas.height;
-        if (particle.y > canvas.height) particle.y = 0;
+        // loop nas bordas
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
 
-        // Desenhar partícula
+        // desenhar
         ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(250, 204, 21, ${particle.opacity})`; // yellow-400
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(250, 204, 21, ${p.opacity})`;
         ctx.fill();
 
-        connectParticles(particle, i);
-      });
+        connectParticles(p, i);
+      }
     };
 
-    const connectParticles = (particle: Particle, index: number) => {
+    const connectParticles = (p: Particle, index: number) => {
       const maxConnections = 4;
       const maxDistanceSq = 100 * 100;
 
@@ -100,16 +106,16 @@ export function BackgroundParticles() {
         j++
       ) {
         const other = particles.current[j];
-        const dx = particle.x - other.x;
-        const dy = particle.y - other.y;
+        const dx = p.x - other.x;
+        const dy = p.y - other.y;
         const distSq = dx * dx + dy * dy;
 
         if (distSq < maxDistanceSq) {
+          const alpha = 0.1 * (1 - distSq / maxDistanceSq) * Math.min(p.opacity, other.opacity);
           ctx.beginPath();
-          const alpha = 0.1 * (1 - distSq / maxDistanceSq);
           ctx.strokeStyle = `rgba(250, 204, 21, ${alpha})`;
           ctx.lineWidth = 1;
-          ctx.moveTo(particle.x, particle.y);
+          ctx.moveTo(p.x, p.y);
           ctx.lineTo(other.x, other.y);
           ctx.stroke();
         }
@@ -126,13 +132,10 @@ export function BackgroundParticles() {
       mouse.current.y = e.clientY;
     };
 
-    // Adiciona novas partículas aos poucos
+    // adiciona novas partículas continuamente
     addParticlesInterval = window.setInterval(() => {
       if (particles.current.length < targetCount.current) {
-        const toAdd = Math.min(
-          5,
-          targetCount.current - particles.current.length
-        );
+        const toAdd = Math.min(5, targetCount.current - particles.current.length);
         for (let i = 0; i < toAdd; i++) {
           particles.current.push(createParticle());
         }
