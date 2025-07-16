@@ -37,7 +37,7 @@ body {
   font-family: var(--font-family);
   scrollbar-width: thin;
   scrollbar-color: var(--color-neutral-600) var(--color-neutral-900);
-  background: radial-gradient(ellipse at 50% 50%, #160101 5%, #000000 100%);
+  background: radial-gradient(ellipse at 50% 50%, #160e01 5%, #000000 100%);
   color: white;
 }
 
