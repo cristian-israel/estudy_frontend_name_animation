@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Fontes personalizadas */
+@theme {
+  --font-montserrat: "montserrat", sans-serif;
+  --font-quicksand: "quicksand", sans-serif;
+  --font-comfortaa: "comfortaa", sans-serif;
+
+  /* Paleta de cores RED */
+  --color-red-50: #fff2f1;
+  --color-red-100: #ffe1df;
+  --color-red-200: #ffc8c4;
+  --color-red-300: #ffa29b;
+  --color-red-400: #ff6d62;
+  --color-red-500: #ff3f31;
+  --color-red-600: #f02112;
+  --color-red-700: #ca180b;
+  --color-red-800: #a7180d;
+  --color-red-900: #8a1a12;
+
+  /* Paleta de cores BLUE */
+  --color-blue-50: #eff9ff;
+  --color-blue-100: #def2ff;
+  --color-blue-200: #b6e8ff;
+  --color-blue-300: #75d8ff;
+  --color-blue-400: #2cc5ff;
+  --color-blue-500: #00b3ff;
+  --color-blue-600: #008bd4;
+  --color-blue-700: #006eab;
+  --color-blue-800: #005d8d;
+  --color-blue-900: #064d74;
+}
+
+body {
+  font-family: var(--font-family);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-neutral-600) var(--color-neutral-900);
+  background: radial-gradient(ellipse at 50% 50%, #160101 5%, #000000 100%);
+  color: white;
+}
+
+.grid-pattern {
+  position: absolute;
+  background-image: linear-gradient(
+      to right,
+      rgba(14, 165, 233, 0.03) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(14, 165, 233, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+}
