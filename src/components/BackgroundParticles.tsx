@@ -73,8 +73,8 @@ export function BackgroundParticles() {
         }
 
         // movimento levemente em direção ao mouse
-        p.x = lerp(p.x, mouse.current.x, 0.0003);
-        p.y = lerp(p.y, mouse.current.y, 0.0003);
+        p.x = lerp(p.x, mouse.current.x, 0.0005);
+        p.y = lerp(p.y, mouse.current.y, 0.0005);
 
         // movimento natural
         p.x += p.speedX;
@@ -97,8 +97,8 @@ export function BackgroundParticles() {
     };
 
     const connectParticles = (p: Particle, index: number) => {
-      const maxConnections = 4;
-      const maxDistanceSq = 100 * 100;
+      const maxConnections = 6;
+      const maxDistanceSq = 150 * 150;
 
       for (
         let j = index + 1;
@@ -114,7 +114,7 @@ export function BackgroundParticles() {
           const alpha = 0.1 * (1 - distSq / maxDistanceSq) * Math.min(p.opacity, other.opacity);
           ctx.beginPath();
           ctx.strokeStyle = `rgba(250, 204, 21, ${alpha})`;
-          ctx.lineWidth = 1;
+          ctx.lineWidth = 2;
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(other.x, other.y);
           ctx.stroke();
