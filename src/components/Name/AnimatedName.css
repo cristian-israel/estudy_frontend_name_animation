@@ -1,0 +1,60 @@
+/* LetterEffect.css */
+:root {
+  --background-color: hsla(259, 36%, 47%, 1);
+  --shadow-scale: 1.1;
+  --initial-skew: -40deg;
+  --hover-skew: -10deg;
+  --animation-duration: 0.3s;
+  --shadow-initial-skew: -20deg;
+  --shadow-hover-skew: -5deg;
+}
+
+.letter-effect {
+  display: inline-block;
+  position: relative;
+  font-family: Avenir Next, Helvetica Neue, Helvetica, Tahoma, sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  color: white;
+  transform-style: preserve-3d;
+  perspective: 500px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.letter-effect::before,
+.letter-effect::after {
+  position: absolute;
+  top: 0;
+  left: -1px;
+  content: attr(data-text);
+  transition: all ease-out var(--animation-duration);
+  display: none;
+}
+
+@media (min-width: 320px) {
+  .letter-effect::before,
+  .letter-effect::after {
+    display: block;
+  }
+}
+
+.letter-effect::before {
+  z-index: 1;
+  color: rgba(0, 0, 0, 0.2);
+  transform: scale(var(--shadow-scale), 1) skew(0deg, var(--shadow-initial-skew));
+}
+
+.letter-effect::after {
+  z-index: 2;
+  color: var(--background-color);
+  text-shadow: -1px 0 1px var(--background-color), 1px 0 1px rgba(0, 0, 0, 0.8);
+  transform: rotateY(var(--initial-skew));
+}
+
+.letter-effect:hover::before {
+  transform: scale(var(--shadow-scale), 1) skew(0deg, var(--shadow-hover-skew));
+}
+
+.letter-effect:hover::after {
+  transform: rotateY(var(--hover-skew));
+}
