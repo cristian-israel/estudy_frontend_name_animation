@@ -1,4 +1,4 @@
-import { BackgroundParticles } from "./components/BackgroundParticles";
+import { BackgroundParticles } from "./components/BackgroundParticles/BackgroundParticles";
 import { AnimatedName } from "./components/AnimatedName";
 
 function App() {
