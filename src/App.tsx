@@ -5,7 +5,7 @@ function App() {
   return (
     <section className="relative w-screen h-screen overflow-hidden flex justify-center items-center select-none selection:bg-yellow-900/50 selection:text-white">
       <BackgroundParticles />
-      <AnimatedName name="Cristian Israel da Silva" />
+      <AnimatedName name="Bruna Formenton" />
     </section>
   );
 }

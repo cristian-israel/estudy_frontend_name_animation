@@ -9,11 +9,13 @@ const letterAnimation = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.05, type: "spring", stiffness: 200 },
+    transition: { delay: i * 0.05, duration: 0.3, ease: "easeOut" },
   }),
 };
 
 export function AnimatedName({ name }: AnimatedNameProps) {
+  if (!name) return null;
+
   return (
     <motion.div
       initial="hidden"
