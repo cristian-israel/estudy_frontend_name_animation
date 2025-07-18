@@ -27,10 +27,11 @@ export function AnimatedName({ name }: AnimatedNameProps) {
           key={i}
           custom={i}
           variants={letterAnimation}
-          className="inline bg-gradient-to-br from-yellow-300 via-yellow-500 to-yellow-700 bg-clip-text text-transparent hover:scale-110 transition-transform duration-300"
+          className="inline bg-gradient-to-br from-yellow-300 via-yellow-500 to-yellow-700 bg-clip-text text-transparent hover:scale-110 transition-transform duration-300 will-change-transform"
         >
           {char === " " ? "\u00A0" : char}
         </motion.span>
+
       ))}
     </motion.div>
   );
