@@ -2,10 +2,16 @@ import { useEffect, useState } from "react";
 import "./TypingSlider.css";
 
 const phrases = [
-  "**Bruna** Letícia Formenton",
-  "Uma bela moça, apelido **Meu bem**",
-  "Incrivelmente **inteligente** e **encantadora**!",
+  "I'm **Cristian Israel**",
+  "**Full stack** developer for 2 years",
+  "No **coffee**, no code!",
 ];
+
+// const phrases = [
+//   "**Bruna** Letícia Formenton",
+//   "Uma bela moça, apelido **Meu bem**",
+//   "Incrivelmente **inteligente** e **encantadora**!",
+// ];
 
 type Mode = "typing" | "deleting" | "correcting" | "waiting";
 

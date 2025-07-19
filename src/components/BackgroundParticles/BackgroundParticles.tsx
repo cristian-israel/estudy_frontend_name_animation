@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
 interface Particle {
@@ -52,7 +52,7 @@ export function BackgroundParticles() {
 
       // Brilho leve no mouse
       const gradient = ctx.createRadialGradient(mouse.current.x, mouse.current.y, 0, mouse.current.x, mouse.current.y, 360);
-      gradient.addColorStop(0, "rgba(255, 255, 200, 0.02)");
+      gradient.addColorStop(0, "rgba(255, 255, 200, 0.01)");
       gradient.addColorStop(1, "rgba(255, 255, 200, 0)");
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
