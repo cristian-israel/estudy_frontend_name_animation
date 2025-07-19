@@ -81,17 +81,25 @@ export function BackgroundParticles() {
         const distSq = dx * dx + dy * dy;
         const dist = Math.sqrt(distSq);
 
-        // Suave aproximação ao clicar
-        if (isMouseDown.current && dist < 200) {
-          p.x = lerp(p.x, mouse.current.x, 0.008); // menor valor para suavizar
-          p.y = lerp(p.y, mouse.current.y, 0.008);
-        } else if (!isMouseDown.current && dist < 150) {
-          // Repulsão mais intensa após soltar
-          const angle = Math.atan2(dy, dx);
-          const force = (150 - dist) / 150; // força proporcional à distância
-          p.x += Math.cos(angle) * 1.5 * force;
-          p.y += Math.sin(angle) * 1.5 * force;
+        const angle = Math.atan2(dy, dx);
+
+        // ATRAÇÃO GLOBAL (quanto mais perto, mais forte)
+        if (isMouseDown.current) {
+          const force = Math.max(0.15, 1 - dist / Math.max(canvas.width, canvas.height));
+          p.x = lerp(p.x, mouse.current.x, 0.002 * force); // mais longe = menor força
+          p.y = lerp(p.y, mouse.current.y, 0.002 * force);
         }
+
+        // REPULSÃO GLOBAL ao soltar
+        else {
+          const force = 1 - dist / Math.max(canvas.width, canvas.height); // força decai com distância
+          if (force > 0) {
+            const repulse = 2.5 * force;
+            p.x += Math.cos(angle) * repulse;
+            p.y += Math.sin(angle) * repulse;
+          }
+        }
+
 
         // movimento natural
         p.x += p.speedX;
